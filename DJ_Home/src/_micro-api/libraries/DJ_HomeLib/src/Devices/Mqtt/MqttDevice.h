@@ -7,12 +7,12 @@
 
 namespace home
 {
-	class MqttDevice :public Device
-	{
-	public:
-		MqttDevice(const std::string& address);
-		virtual bool Loop() const { return true; };
-		virtual const std::string Type() const { return "MqttDevice"; };
-		void Publish(const std::string& json) const;
-	};
+	//class MqttDevice :public Device
+	//{
+	//public:
+	//	MqttDevice(const std::string& address);
+	//	virtual bool Loop() const { return true; };
+	//	virtual const std::string Type() const { return "MqttDevice"; };
+	//	void Publish(const std::string& json) const;
+	//};
 }
