@@ -93,7 +93,7 @@ namespace home
 	//	Mqtt::Init(this);
 	//	DJOneWire::Init(this);
 	//	(*this)["Mqtt"] = new MqttDevice("Mqtt");
-	//	(*this)["MH_Z16"] = new MH_Z16("MH_Z16");
+		(*this)["MH_Z16"] = new MH_Z16("MH_Z16");
 	//	//mDevices["Ventmachine"] = new Ventmachine(*this);
 	//	(*this)["Ventmachine"] = new Ventmachine("Ventmachine");
 	}
