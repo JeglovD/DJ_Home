@@ -14,4 +14,5 @@ void setup()
 void loop()
 {
 	home::Devices::GetInstance().Loop();
+	delay(5000);
 }

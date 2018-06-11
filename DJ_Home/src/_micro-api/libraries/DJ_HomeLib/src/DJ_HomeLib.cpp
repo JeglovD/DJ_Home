@@ -107,7 +107,7 @@ namespace home
 	bool Devices::Loop() const
 	{
 		Mqtt::GetInstance().Loop();
-	//	DJOneWire::Loop();
+		DJOneWire::GetInstance().Loop();
 		//for (auto pIt = begin(); pIt != end(); ++pIt)
 		//	pIt->second->Loop();
 	}
