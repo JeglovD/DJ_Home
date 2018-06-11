@@ -106,8 +106,7 @@ namespace home
 
 	bool Devices::Loop() const
 	{
-	//	//std::cout << "bool Devices::Loop()" << std::endl;
-		//Mqtt::GetInstance().Loop();
+		Mqtt::GetInstance().Loop();
 	//	DJOneWire::Loop();
 		//for (auto pIt = begin(); pIt != end(); ++pIt)
 		//	pIt->second->Loop();
