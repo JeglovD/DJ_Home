@@ -1,6 +1,7 @@
 #pragma once
 
 #include <StandardCplusplus.h>
+#include <functional>
 #include <serstream.h>
 #include <string>
 #include <map>
@@ -22,7 +23,8 @@ namespace home
 	public:
 		Device(const std::string& Address);
 		//virtual ~Device() {};
-		bool operator<(const Device& device) const { return mAddress < device.mAddress; }
+		//bool operator<(const Device& device) const { return mAddress < device.mAddress; }
+		const std::string& Address() { return mAddress; }
 		//virtual bool Loop() const = 0;
 		//virtual const std::string Type() const = 0;
 		////virtual bool Execute(const std::string& function, const std::string& value) const;
@@ -58,13 +60,23 @@ namespace home
 		mutable unsigned long mLoopMillis;
 	};
 
+	class DeviceCompare
+	{
+	public:
+		bool operator()(const Device* pDevice1, const Device* pDevice2) const
+		{
+			return pDevice1->Address() < pDevice2->Address();
+		}
+	};
+
 	//class Devices :public std::map<std::string, Device*>
-	class Devices :public std::set<Device>
+	class Devices :public std::set<Device*, DeviceCompare>
 	{
 	private:
 		Devices();
 		Devices(const Devices&);
 		Devices& operator=(Devices&);
+		~Devices();
 	public:
 		static Devices& GetInstance();
 		bool Loop() const;

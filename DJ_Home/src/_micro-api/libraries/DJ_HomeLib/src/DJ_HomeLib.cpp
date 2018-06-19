@@ -87,7 +87,8 @@ namespace home
 	//	}
 	//}
 
-	Devices::Devices()
+	Devices::Devices()//:
+		//TDevices([](const Device* pDevice1, const Device* pDevice2) {return true; })
 	{
 		std::cout << "Devices::Devices()" << std::endl;
 	////	Mqtt::Init(this);
@@ -98,6 +99,12 @@ namespace home
 	////	(*this)["Ventmachine"] = new Ventmachine("Ventmachine");
 	}
 
+	Devices::~Devices()
+	{
+		for (auto pIt = begin(); pIt != end(); ++pIt)
+			delete *pIt;
+	}
+	
 	Devices& Devices::GetInstance()
 	{
 		static Devices devices;
