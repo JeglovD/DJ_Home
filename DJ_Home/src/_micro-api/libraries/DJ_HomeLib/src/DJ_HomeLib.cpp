@@ -13,7 +13,7 @@ namespace home
 		mAddress(Address),
 		mLoopMillis(0)
 	{
-		//mValue["LoopMillis"] = "60000";
+		mValue["LoopMillis"] = "60000";
 		//mFunctions["Set()"] = &Device::Set;
 	}
 
@@ -95,7 +95,8 @@ namespace home
 	////	DJOneWire::Init(this);
 	////	(*this)["Mqtt"] = new MqttDevice("Mqtt");
 	////	(*this)["MH_Z16"] = new MH_Z16("MH_Z16");
-	////	//mDevices["Ventmachine"] = new Ventmachine(*this);
+		insert(MH_Z16("MH_Z16"));
+			////	//mDevices["Ventmachine"] = new Ventmachine(*this);
 	////	(*this)["Ventmachine"] = new Ventmachine("Ventmachine");
 	}
 
@@ -111,12 +112,25 @@ namespace home
 		return devices;
 	}
 
+	std::pair<Devices::iterator, bool> Devices::insert(Device&& device)
+	{
+		auto pIt = find(device.Address());
+		if (pIt != end())
+			return std::pair<iterator, bool>(pIt, false);
+		return std::set<Device*, DeviceCompare>::insert(device.Clone());
+	}
+	
+	Devices::iterator Devices::find(const std::string& address)
+	{
+		return std::find_if(begin(), end(), [address](const Device* pDevice) {return address == pDevice->Address(); });
+	}
+
 	bool Devices::Loop() const
 	{
-		Mqtt::GetInstance().Loop();
-		DJOneWire::GetInstance().Loop();
-		//for (auto pIt = begin(); pIt != end(); ++pIt)
-		//	pIt->second->Loop();
+		//Mqtt::GetInstance().Loop();
+		//DJOneWire::GetInstance().Loop();
+		for (auto pIt = begin(); pIt != end(); ++pIt)
+			(*pIt)->Loop();
 	}
 
 	// Жеглов
