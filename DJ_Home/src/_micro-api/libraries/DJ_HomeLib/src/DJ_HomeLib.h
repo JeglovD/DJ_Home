@@ -29,17 +29,17 @@ namespace home
 		virtual bool Loop() const = 0;
 		//virtual const std::string Type() const = 0;
 		////virtual bool Execute(const std::string& function, const std::string& value) const;
-		//template <typename T>
-		//const T OptionGet(const std::string& option) const
-		//{
-		//	T result = T();
-		//	auto pIt = mValue.find(option);
-		//	if (pIt == mValue.end())
-		//		return result;
-		//	std::stringstream ss(pIt->second);
-		//	ss >> result;
-		//	return result;
-		//}
+		template <typename T>
+		const T Get(const std::string& option) const
+		{
+			T result = T();
+			auto pIt = mValue.find(option);
+			if (pIt == mValue.end())
+				return result;
+			std::stringstream ss(pIt->second);
+			ss >> result;
+			return result;
+		}
 		//void OptionPublish(const String& option) const;
 		//void Set(const std::string& json) const;
 		//void Set(const std::string& option, const std::string& value) const;
@@ -47,10 +47,10 @@ namespace home
 		//std::map<std::string, void(Device::*)(const std::string&) const> mFunctions;
 
 	protected:
-		//// »спользуетс€ устройствами дл€ сохранени€ своих значений в map mValue
-		//// ѕровер€ет есть ли переменна€ в списке соответствующего устройства
-		////		если нет - значение не записывает, генерит MQTT сообщение
-		//void SetValueProtected(const std::string& option, const std::string& value) const;
+		// »спользуетс€ датчиками дл€ сохранени€ своих значений в map mValue
+		// ѕри сохранении провер€ет есть ли переменна€ в списке соответствующего устройства
+		// ѕубликует сообщение в MQTT
+		void Save(const std::string& option, const std::string& value) const;
 		//void Publish(const std::string& json) const;
 		//// »змен€ет состо€ние устройства
 		////  од задаетс€ дл€ каждого устройства индивидуально

@@ -38,18 +38,18 @@ namespace home
 	//			Mqtt::GetInstance().Publish(mAddress + "/Message", "The \"" + option + "\" option cannot be set.");
 	//}
 
-	//void Device::SetValueProtected(const std::string& option, const std::string& value) const
-	//{
+	void Device::Save(const std::string& option, const std::string& value) const
+	{
 	//	//std::cout << "Device::OptionSetProtected()" << std::endl;
 	//	//std::cout << "\t" << "[" << option << "]=" << value << std::endl;
-	//	if (mValue.find(option) == mValue.end())
-	//		Mqtt::GetInstance().Publish(mAddress + "/Message", "The \"" + option + "\" option is not supported.");
-	//	else
-	//	{
-	//		mValue[option] = value;
-	//		Mqtt::GetInstance().Publish(mAddress + "/" + option, value);
-	//	}
-	//}
+		if (mValue.find(option) == mValue.end())
+			Mqtt::GetInstance().Publish(mAddress + "/Message", "The \"" + option + "\" option is not supported.");
+		else
+		{
+			mValue[option] = value;
+			Mqtt::GetInstance().Publish(mAddress + "/" + option, value);
+		}
+	}
 
 	// Жеглов
 	//const std::string Device::OptionGet(const std::string& id) const
@@ -127,7 +127,7 @@ namespace home
 
 	bool Devices::Loop() const
 	{
-		//Mqtt::GetInstance().Loop();
+		Mqtt::GetInstance().Loop();
 		//DJOneWire::GetInstance().Loop();
 		for (auto pIt = begin(); pIt != end(); ++pIt)
 			(*pIt)->Loop();

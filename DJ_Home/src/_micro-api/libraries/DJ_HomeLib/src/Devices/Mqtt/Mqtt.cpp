@@ -20,12 +20,12 @@ namespace home
 		return mqtt;
 	}
 
-	//void Mqtt::Publish(const std::string& topic, const std::string& value)
-	//{
-	//	//std::cout << "Mqtt::Publish()" << std::endl;
-	//	//if (Loop())
-	//	//	mMqttClient.publish(topic.c_str(), value.c_str());
-	//}
+	void Mqtt::Publish(const std::string& topic, const std::string& value)
+	{
+		//std::cout << "Mqtt::Publish()" << std::endl;
+		if (Loop())
+			mMqttClient.publish(topic.c_str(), value.c_str());
+	}
 
 	bool Mqtt::Loop()
 	{

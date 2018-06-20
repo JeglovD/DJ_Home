@@ -19,8 +19,8 @@ namespace home
 
 	bool MH_Z16::Loop() const
 	{
-	//	if (millis() - mLoopMillis < OptionGet<unsigned long>("LoopMillis"))
-	//		return false;
+		if (millis() - mLoopMillis < Get<unsigned long>("LoopMillis"))
+			return false;
 		mLoopMillis = millis();
 		std::cout << "bool MH_Z16::Loop()" << std::endl;
 		byte request[9] = { 0xFF,0x01,0x86,0x00,0x00,0x00,0x00,0x00,0x79 };
@@ -42,11 +42,8 @@ namespace home
 		unsigned int responseLow = (unsigned int)response[3];
 		std::stringstream ss;
 		ss << (unsigned int)(256 * responseHigh + responseLow);
-		std::cout << "\t" << "CO2: " << ss.str() << std::endl;
-		//mValue["CO2"] = ss.str();
-	//	//mPMqtt->Publish(mAddress + "/CO2", Get("CO2"));
-	//	SetValueProtected("CO2", ss.str());
-	//	std::cout << "\t" << "[CO2]=" << OptionGet<int>("CO2") << std::endl;
+		Save("CO2", ss.str());
+		std::cout << "\t" << "[CO2]=" << Get<int>("CO2") << std::endl;
 		return true;
 	}
 }

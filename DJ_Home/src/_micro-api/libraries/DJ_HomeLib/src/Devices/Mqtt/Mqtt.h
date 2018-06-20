@@ -14,7 +14,7 @@ namespace home
 		static Mqtt& GetInstance();
 	//	// Жеглов
 	//	//static void Publish(const std::string& address, const std::string& option, const std::string& value);
-	//	void Publish(const std::string& topic, const std::string& value = "");
+		void Publish(const std::string& topic, const std::string& value = "");
 		bool Loop();
 	//	//static void Init(const Devices* pDevices) { mpDevices = pDevices; };
 	private:
