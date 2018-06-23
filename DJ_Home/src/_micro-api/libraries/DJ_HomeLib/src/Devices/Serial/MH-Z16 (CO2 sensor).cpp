@@ -8,7 +8,7 @@ namespace home
 	{
 		std::cout << "MH_Z16::MH_Z16()" << std::endl;
 		Serial3.begin(9600);
-		mValue["CO2"] = "0";
+		mValue["[CO2]"] = "0";
 	}
 	
 	//bool MH_Z16::Execute(const std::string& function, const std::string& value) const
@@ -42,8 +42,8 @@ namespace home
 		unsigned int responseLow = (unsigned int)response[3];
 		std::stringstream ss;
 		ss << (unsigned int)(256 * responseHigh + responseLow);
-		Save("CO2", ss.str());
-		std::cout << "\t" << "[CO2]=" << Get<int>("CO2") << std::endl;
+		Save("[CO2]", ss.str());
+		std::cout << "\t" << "[CO2]=" << Get<int>("[CO2]") << std::endl;
 		return true;
 	}
 }

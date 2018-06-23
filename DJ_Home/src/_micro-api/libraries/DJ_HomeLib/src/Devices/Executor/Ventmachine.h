@@ -5,12 +5,13 @@
 
 namespace home
 {
-	//class Ventmachine:public Device
-	//{
-	//public:
-	//	Ventmachine(const std::string& address);
-	//	virtual bool Loop() const;
-	//	virtual const std::string Type() const { return "Executor / Ventmachine"; };
+	class Ventmachine:public Device
+	{
+	public:
+		Ventmachine(const std::string& address);
+		virtual Ventmachine* Clone() { return new Ventmachine(*this); }
+		virtual bool Loop() const;
+		virtual const std::string Type() const { return "Executor / Ventmachine"; };
 	//private:
 	//	const Devices& mDevices;
 	//	mutable std::map<unsigned long, unsigned int> mCO2;
@@ -18,5 +19,5 @@ namespace home
 
 	//	const unsigned int CO2Min() const;
 	//	const unsigned int CO2Max() const;
-	//};
+	};
 }

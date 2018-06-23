@@ -51,6 +51,7 @@ namespace home
 		// При сохранении проверяет есть ли переменная в списке соответствующего устройства
 		// Публикует сообщение в MQTT
 		void Save(const std::string& option, const std::string& value) const;
+
 		//void Publish(const std::string& json) const;
 		// Изменяет состояние устройства, вызывается из Set()
 		// Код задается для каждого устройства индивидуально
@@ -87,8 +88,19 @@ namespace home
 		bool Loop() const;
 	//	//void OptionPublish(const std::string& device, const std::string& option = "") const;
 	//	//void Set(const std::string& device, const std::string& option, const std::string& value) const;
-	//	//const std::string Get(const std::string& option) const;
-
-	//	//std::map<std::string, Device*> mDevices;
+		template <typename T>
+		const T Get(const std::string& topic)
+		{
+			auto pos = topic.rfind("/");
+			if (pos != std::string::npos)
+			{
+				std::string device = topic.substr(0, pos);
+				std::string option = topic.substr(pos + 1);
+				auto pIt = this->find(device);
+				if (pIt != end())
+					return (**pIt).Get<T>(option);
+			}
+			return T();
+		}
 	};
 }

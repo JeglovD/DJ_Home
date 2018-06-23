@@ -2,18 +2,17 @@
 
 namespace home
 {
-	//Ventmachine::Ventmachine(const std::string& address) :
-	//	Device(address)//,
-	//	//mDevices(devices),
+	Ventmachine::Ventmachine(const std::string& address) :
+		Device(address)//,
 	//	//mOffMillis(0)
-	//{
-	//	std::cout << "Ventmachine::Ventmachine()" << std::endl;
-	//	mValue["LoopMillis"] = "10000";
-	//	//SetValueProtected("CO2", "MH_Z16/CO2");
-	//	mValue["CO2"] = "MH_Z16/[CO2]";
-	//	//SetValueProtected("Switch", "0.0.0.0.0.0.0.0/Switch0");
-	//	mValue["Switch"] = "133_154_12_119_192_3_16_180/[SwitchA]";
-	//}
+	{
+		std::cout << "Ventmachine::Ventmachine()" << std::endl;
+		mValue["LoopMillis"] = "10000";
+		mValue["CO2"] = "MH_Z16/[CO2]";
+		mValue["Switch"] = "133:154:12:119:192:3:16:180/[SwitchA]";
+		mValue["[CO2min]"] = "";
+		mValue["[CO2max]"] = "";
+	}
 
 	//const unsigned int Ventmachine::CO2Min() const
 	//{
@@ -31,13 +30,30 @@ namespace home
 	//	return result;
 	//}
 
-	//bool Ventmachine::Loop() const
-	//{
-	//	if (millis() - mLoopMillis < OptionGet<unsigned long>("LoopMillis"))
-	//		return false;
-	//	mLoopMillis = millis();
-	//	std::cout << "Ventmachine::Loop()" << std::endl;
-	//	//std::cout << "\t" << "[CO2]=" << pDevices->Get(mValue["CO2"]) << std::endl;
+	bool Ventmachine::Loop() const
+	{
+		if (millis() - mLoopMillis < Get<unsigned long>("LoopMillis"))
+			return false;
+		mLoopMillis = millis();
+		std::cout << "Ventmachine::Loop()" << std::endl;
+		Devices& devices = Devices::GetInstance();
+		auto co2 = devices.Get<size_t>(mValue["CO2"]);
+		std::cout << "\t" << "[co2]=" << co2 << std::endl;
+		//if (co2)
+		//{
+		//	auto co2min = Get<size_t>("[CO2min]");
+		//	auto co2max = Get<size_t>("[CO2max]");
+		//	if (!co2min || co2 < co2min)
+		//	{
+		//		co2min = co2;
+		//		Save("[CO2min]", std::string(co2min));
+		//	}
+		//	if (co2 > co2max)
+		//	{
+		//		co2max = co2;
+		//		Save("[CO2max]", std::string(co2max));
+		//	}
+		//}
 	//	//unsigned long mMillis(millis());
 	//	//// Если millis() обнулился - очищаем mCO2
 	//	//if (mCO2.size() && 
@@ -89,5 +105,5 @@ namespace home
 	//	//	}
 	//	//}
 	//	//std::cout << "\t" << mCO2.size() << std::endl;
-	//}
+	}
 }

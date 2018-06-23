@@ -29,25 +29,27 @@ namespace home
 	}
 
 	void Device::Set(const std::string& option, const std::string& value) const
-	{ 
+	{
 		//std::cout << "Device::OptionSet()" << std::endl;
 		//std::cout << "\t" << "[" << id << "] = " << value << std::endl;
 		if (mValue.find(option) == mValue.end())
 			Mqtt::GetInstance().Publish(mAddress + "/Message", "The \"" + option + "\" option is not supported.");
 		else
-			if(!SetProtected(option, value))
+			if (!SetProtected(option, value))
 				Mqtt::GetInstance().Publish(mAddress + "/Message", "The \"" + option + "\" option cannot be set.");
 	}
 
 	void Device::Save(const std::string& option, const std::string& value) const
 	{
-	//	//std::cout << "Device::OptionSetProtected()" << std::endl;
-	//	//std::cout << "\t" << "[" << option << "]=" << value << std::endl;
+		//	//std::cout << "Device::OptionSetProtected()" << std::endl;
+		//	//std::cout << "\t" << "[" << option << "]=" << value << std::endl;
 		if (mValue.find(option) == mValue.end())
 			Mqtt::GetInstance().Publish(mAddress + "/Message", "The \"" + option + "\" option is not supported.");
 		else
 		{
-			mValue[option] = value;
+			std::stringstream ss(value);
+			//mValue[option] = value;
+			ss >> mValue[option];
 			Mqtt::GetInstance().Publish(mAddress + "/" + option, value);
 		}
 	}
@@ -92,14 +94,9 @@ namespace home
 		//TDevices([](const Device* pDevice1, const Device* pDevice2) {return true; })
 	{
 		std::cout << "Devices::Devices()" << std::endl;
-	////	Mqtt::Init(this);
-	////	DJOneWire::Init(this);
-	////	(*this)["Mqtt"] = new MqttDevice("Mqtt");
 		insert(MqttDevice("Mqtt"));
-	////	(*this)["MH_Z16"] = new MH_Z16("MH_Z16");
-		//insert(MH_Z16("MH_Z16"));
-			////	//mDevices["Ventmachine"] = new Ventmachine(*this);
-	////	(*this)["Ventmachine"] = new Ventmachine("Ventmachine");
+		insert(MH_Z16("MH_Z16"));
+		insert(Ventmachine("Ventmachine"));
 	}
 
 	Devices::~Devices()
@@ -147,21 +144,6 @@ namespace home
 	//		if (pIt != mDevices.end())
 	//			pIt->second->Set(parametr, value);
 	//	}
-	//}
-
-	//const std::string Devices::Get(const std::string& option) const
-	//{
-	//	std::string result;
-	//	auto pos = id.rfind("/");
-	//	if (pos != std::string::npos)
-	//	{
-	//		std::string device = id.substr(0, pos);
-	//		std::string option = id.substr(pos + 1);
-	//		auto pIt = find(device);
-	//		if (pIt != end())
-	//			result = pIt->second->OptionGet(option);
-	//	}
-	//	return result;
 	//}
 
 	//void Devices::OptionPublish(const std::string& device, const std::string& option) const
