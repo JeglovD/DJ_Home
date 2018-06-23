@@ -89,6 +89,7 @@
     <ClInclude Include="src\_micro-api\libraries\DJ_HomeLib\src\Devices\DJ_OneWire\DJ_OneWire.h" />
     <ClInclude Include="src\_micro-api\libraries\DJ_HomeLib\src\Devices\DJ_OneWire\DS18B20 (thermometer).h" />
     <ClInclude Include="src\_micro-api\libraries\DJ_HomeLib\src\Devices\DJ_OneWire\DS2413 (switch).h" />
+    <ClInclude Include="src\_micro-api\libraries\DJ_HomeLib\src\Devices\DJ_OneWire\Unknown.h" />
     <ClInclude Include="src\_micro-api\libraries\DJ_HomeLib\src\Devices\Executor\Ventmachine.h" />
     <ClInclude Include="src\_micro-api\libraries\DJ_HomeLib\src\Devices\Mqtt\Mqtt.h" />
     <ClInclude Include="src\_micro-api\libraries\DJ_HomeLib\src\Devices\Mqtt\MqttDevice.h" />
@@ -101,6 +102,7 @@
     <ClCompile Include="src\_micro-api\libraries\DJ_HomeLib\src\Devices\DJ_OneWire\DJ_OneWire.cpp" />
     <ClCompile Include="src\_micro-api\libraries\DJ_HomeLib\src\Devices\DJ_OneWire\DS18B20 (thermometer).cpp" />
     <ClCompile Include="src\_micro-api\libraries\DJ_HomeLib\src\Devices\DJ_OneWire\DS2413 (switch).cpp" />
+    <ClCompile Include="src\_micro-api\libraries\DJ_HomeLib\src\Devices\DJ_OneWire\Unknown.cpp" />
     <ClCompile Include="src\_micro-api\libraries\DJ_HomeLib\src\Devices\Executor\Ventmachine.cpp" />
     <ClCompile Include="src\_micro-api\libraries\DJ_HomeLib\src\Devices\Mqtt\Mqtt.cpp" />
     <ClCompile Include="src\_micro-api\libraries\DJ_HomeLib\src\Devices\Mqtt\MqttDevice.cpp" />

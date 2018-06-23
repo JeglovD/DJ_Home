@@ -43,6 +43,9 @@
     <ClCompile Include="src\_micro-api\libraries\DJ_HomeLib\src\Devices\Mqtt\MqttDevice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\_micro-api\libraries\DJ_HomeLib\src\Devices\DJ_OneWire\Unknown.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\_micro-api\libraries\DJ_HomeLib\src\DJ_HomeLib.h">
@@ -73,6 +76,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\_micro-api\libraries\DJ_HomeLib\src\Devices\Mqtt\MqttDevice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_micro-api\libraries\DJ_HomeLib\src\Devices\DJ_OneWire\Unknown.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

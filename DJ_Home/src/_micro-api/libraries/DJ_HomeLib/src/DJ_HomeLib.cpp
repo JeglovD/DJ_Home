@@ -13,30 +13,31 @@ namespace home
 		mAddress(Address),
 		mLoopMillis(0)
 	{
+		//std::cout << "Device::Device()" << std::endl;
 		mValue["LoopMillis"] = "60000";
-		//mFunctions["Set()"] = &Device::Set;
+		mFunctions["Set()"] = &Device::Set;
 	}
 
-	//void Device::Set(const std::string& json) const
-	//{
-	//	//std::cout << "Device::Set()" << std::endl;
-	//	//std::cout << "\t" << "[json]=" << json << std::endl;
-	//	ArduinoJson::StaticJsonBuffer<200> jsonBuffer;
-	//	ArduinoJson::JsonObject& jsonObject = jsonBuffer.parseObject(json.c_str());
-	//	for (auto pIt = jsonObject.begin(); pIt != jsonObject.end(); ++pIt)
-	//		Set(pIt->key, pIt->value.asString());
-	//}
+	void Device::Set(const std::string& json) const
+	{
+		//std::cout << "Device::Set()" << std::endl;
+		//std::cout << "\t" << "[json]=" << json << std::endl;
+		ArduinoJson::StaticJsonBuffer<200> jsonBuffer;
+		ArduinoJson::JsonObject& jsonObject = jsonBuffer.parseObject(json.c_str());
+		for (auto pIt = jsonObject.begin(); pIt != jsonObject.end(); ++pIt)
+			Set(pIt->key, pIt->value.asString());
+	}
 
-	//void Device::Set(const std::string& option, const std::string& value) const
-	//{ 
-	//	//std::cout << "Device::OptionSet()" << std::endl;
-	//	//std::cout << "\t" << "[" << id << "] = " << value << std::endl;
-	//	if (mValue.find(option) == mValue.end())
-	//		Mqtt::GetInstance().Publish(mAddress + "/Message", "The \"" + option + "\" option is not supported.");
-	//	else
-	//		if(!SetProtected(option, value))
-	//			Mqtt::GetInstance().Publish(mAddress + "/Message", "The \"" + option + "\" option cannot be set.");
-	//}
+	void Device::Set(const std::string& option, const std::string& value) const
+	{ 
+		//std::cout << "Device::OptionSet()" << std::endl;
+		//std::cout << "\t" << "[" << id << "] = " << value << std::endl;
+		if (mValue.find(option) == mValue.end())
+			Mqtt::GetInstance().Publish(mAddress + "/Message", "The \"" + option + "\" option is not supported.");
+		else
+			if(!SetProtected(option, value))
+				Mqtt::GetInstance().Publish(mAddress + "/Message", "The \"" + option + "\" option cannot be set.");
+	}
 
 	void Device::Save(const std::string& option, const std::string& value) const
 	{
@@ -94,8 +95,9 @@ namespace home
 	////	Mqtt::Init(this);
 	////	DJOneWire::Init(this);
 	////	(*this)["Mqtt"] = new MqttDevice("Mqtt");
+		insert(MqttDevice("Mqtt"));
 	////	(*this)["MH_Z16"] = new MH_Z16("MH_Z16");
-		insert(MH_Z16("MH_Z16"));
+		//insert(MH_Z16("MH_Z16"));
 			////	//mDevices["Ventmachine"] = new Ventmachine(*this);
 	////	(*this)["Ventmachine"] = new Ventmachine("Ventmachine");
 	}
@@ -128,7 +130,7 @@ namespace home
 	bool Devices::Loop() const
 	{
 		Mqtt::GetInstance().Loop();
-		//DJOneWire::GetInstance().Loop();
+		DJOneWire::GetInstance().Loop();
 		for (auto pIt = begin(); pIt != end(); ++pIt)
 			(*pIt)->Loop();
 	}

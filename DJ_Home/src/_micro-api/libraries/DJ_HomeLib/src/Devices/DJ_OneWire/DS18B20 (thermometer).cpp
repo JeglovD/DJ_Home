@@ -3,11 +3,11 @@
 
 namespace home
 {
-	//DS18B20::DS18B20(const OneWireAddress& address) :
-	//	OneWireDevice(address)
-	//{
-	//	mValue["temperature"] = "";
-	//};
+	DS18B20::DS18B20(const OneWireAddress& address) :
+		OneWireDevice(address)
+	{
+		mValue["temperature"] = "";
+	};
 
 	//bool DS18B20::Execute(const std::string& function, const std::string& value) const
 	//{
@@ -15,8 +15,8 @@ namespace home
 	//	return false;
 	//}
 
-	//bool DS18B20::Loop() const
-	//{
+	bool DS18B20::Loop() const
+	{
 	//	//std::cout << "DS18B20::Loop()" << std::endl;
 	//	//std::cout << "\t" << mAddress.StrDec() << std::endl;
 	//	// —брос шины
@@ -48,5 +48,5 @@ namespace home
 	//			//std::cout << "\t" << ss.str() << std::endl;
 	//		}
 	//	}
-	//}
+	}
 }

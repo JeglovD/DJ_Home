@@ -22,12 +22,12 @@ namespace home
 	{
 	public:
 		Device(const std::string& Address);
-		virtual ~Device() {};
+		virtual ~Device() { std::cout << "Device::~Device()" << std::endl; };
 		virtual Device* Clone() = 0;
 		//bool operator<(const Device& device) const { return mAddress < device.mAddress; }
 		virtual const std::string& Address() { return mAddress; }
 		virtual bool Loop() const = 0;
-		//virtual const std::string Type() const = 0;
+		virtual const std::string Type() const = 0;
 		////virtual bool Execute(const std::string& function, const std::string& value) const;
 		template <typename T>
 		const T Get(const std::string& option) const
@@ -41,10 +41,10 @@ namespace home
 			return result;
 		}
 		//void OptionPublish(const String& option) const;
-		//void Set(const std::string& json) const;
-		//void Set(const std::string& option, const std::string& value) const;
+		void Set(const std::string& json) const;
+		void Set(const std::string& option, const std::string& value) const;
 
-		//std::map<std::string, void(Device::*)(const std::string&) const> mFunctions;
+		std::map<std::string, void(Device::*)(const std::string&) const> mFunctions;
 
 	protected:
 		// Используется датчиками для сохранения своих значений в map mValue
@@ -52,13 +52,15 @@ namespace home
 		// Публикует сообщение в MQTT
 		void Save(const std::string& option, const std::string& value) const;
 		//void Publish(const std::string& json) const;
-		//// Изменяет состояние устройства
-		//// Код задается для каждого устройства индивидуально
-		//virtual const bool SetProtected(const std::string& option, const std::string& value) const { return false; };
+		// Изменяет состояние устройства, вызывается из Set()
+		// Код задается для каждого устройства индивидуально
+		virtual const bool SetProtected(const std::string& option, const std::string& value) const { return false; };
 
-		const std::string mAddress;
 		std::map<std::string, std::string> mValue;
 		mutable unsigned long mLoopMillis;
+
+	private:
+		const std::string mAddress;
 	};
 
 	class DeviceCompare

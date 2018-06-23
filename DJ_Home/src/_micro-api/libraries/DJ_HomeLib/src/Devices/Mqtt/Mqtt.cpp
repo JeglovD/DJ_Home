@@ -53,20 +53,21 @@ namespace home
 		std::string value(payload, length);
 		std::cout << "\t" << "[value]=" << value << std::endl;
 
-	////	// Вызов функций через Mqtt
-	////	if (vTopic.size() >= 2 &&
-	////		(*vTopic.rbegin()).find("()") != std::string::npos)
-	////	{
-	////		auto& deviceName = *(++vTopic.rbegin());
-	////		auto& functionName = *vTopic.rbegin();
-	////		if (mpDevices->count(deviceName))
-	////		{
-	////			auto pDevice = (*mpDevices)[deviceName];
-	////			if (pDevice->mFunctions.count(functionName))
-	////				((*pDevice).*(pDevice->mFunctions[functionName]))(value);
-	////			else
-	////				Mqtt::Publish("Message", deviceName + "/" + functionName + " is not found.");
-	////		}
-	////	}
+		// Вызов функций через Mqtt
+		if (vTopic.size() >= 2 &&
+			(*vTopic.rbegin()).find("()") != std::string::npos)
+		{
+			auto& deviceName = *(++vTopic.rbegin());
+			auto& functionName = *vTopic.rbegin();
+			Devices& devices = Devices::GetInstance();
+			auto pIt = devices.find(deviceName);
+			if (pIt != devices.end())
+			{
+				if ((**pIt).mFunctions.count(functionName))
+					((**pIt).*((**pIt).mFunctions[functionName]))(value);
+				else
+					Mqtt::GetInstance().Publish("Message", deviceName + "/" + functionName + " is not found.");
+			}
+		}
 	}
 }
