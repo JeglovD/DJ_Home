@@ -12,12 +12,12 @@ namespace home
 		virtual Ventmachine* Clone() { return new Ventmachine(*this); }
 		virtual bool Loop() const;
 		virtual const std::string Type() const { return "Executor / Ventmachine"; };
-	//private:
-	//	const Devices& mDevices;
-	//	mutable std::map<unsigned long, unsigned int> mCO2;
-	//	mutable unsigned long mOffMillis;
+	private:
+		const unsigned int CO2min() const;
+		const unsigned int CO2max() const;
 
-	//	const unsigned int CO2Min() const;
-	//	const unsigned int CO2Max() const;
+	//	const Devices& mDevices;
+		mutable std::map<unsigned long, unsigned int> mCO2;
+		//	mutable unsigned long mOffMillis;
 	};
 }

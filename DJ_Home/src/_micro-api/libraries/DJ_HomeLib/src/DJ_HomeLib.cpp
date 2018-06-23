@@ -28,30 +28,9 @@ namespace home
 			Set(pIt->key, pIt->value.asString());
 	}
 
-	void Device::Set(const std::string& option, const std::string& value) const
+	void Device::MqttPublish(const std::string& topic, const std::string& value) const
 	{
-		//std::cout << "Device::OptionSet()" << std::endl;
-		//std::cout << "\t" << "[" << id << "] = " << value << std::endl;
-		if (mValue.find(option) == mValue.end())
-			Mqtt::GetInstance().Publish(mAddress + "/Message", "The \"" + option + "\" option is not supported.");
-		else
-			if (!SetProtected(option, value))
-				Mqtt::GetInstance().Publish(mAddress + "/Message", "The \"" + option + "\" option cannot be set.");
-	}
-
-	void Device::Save(const std::string& option, const std::string& value) const
-	{
-		//	//std::cout << "Device::OptionSetProtected()" << std::endl;
-		//	//std::cout << "\t" << "[" << option << "]=" << value << std::endl;
-		if (mValue.find(option) == mValue.end())
-			Mqtt::GetInstance().Publish(mAddress + "/Message", "The \"" + option + "\" option is not supported.");
-		else
-		{
-			std::stringstream ss(value);
-			//mValue[option] = value;
-			ss >> mValue[option];
-			Mqtt::GetInstance().Publish(mAddress + "/" + option, value);
-		}
+		Mqtt::GetInstance().Publish(topic, value);
 	}
 
 	// Жеглов
@@ -132,6 +111,11 @@ namespace home
 			(*pIt)->Loop();
 	}
 
+	void Devices::MqttPublish(const std::string& topic, const std::string& value) const
+	{
+		Mqtt::GetInstance().Publish(topic, value);
+	}
+
 	// Жеглов
 	//void Devices::Set(const std::string& id, const std::string& value) const
 	//{
@@ -172,17 +156,4 @@ namespace home
 	//	}
 	//}
 
-	//void Devices::Set(const std::string& device, const std::string& option, const std::string& value) const
-	//{
-	//	std::cout << "Devices::OptionSet()" << std::endl;
-	//	std::cout << "\t" << "[device]=" << device << std::endl;
-	//	std::cout << "\t" << "[option]=" << option << std::endl;
-	//	std::cout << "\t" << "[value]=" << value << std::endl;
-
-	//	auto pIt = find(device);
-	//	if (pIt == end())
-	//		Mqtt::Publish("Message", "Device \"" + device + "\" is not found.");
-	//	else
-	//		pIt->second->Set(option, value);
-	//}
 }

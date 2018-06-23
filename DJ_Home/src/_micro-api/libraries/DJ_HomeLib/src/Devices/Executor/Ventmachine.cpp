@@ -8,27 +8,26 @@ namespace home
 	{
 		std::cout << "Ventmachine::Ventmachine()" << std::endl;
 		mValue["LoopMillis"] = "10000";
-		mValue["CO2"] = "MH_Z16/[CO2]";
-		mValue["Switch"] = "133:154:12:119:192:3:16:180/[SwitchA]";
-		mValue["[CO2min]"] = "";
-		mValue["[CO2max]"] = "";
+		mValue["CO2"] = "MH_Z16/CO2";
+		mValue["Switch"] = "133:154:12:119:192:3:16:180/SwitchA";
+		mValue["CO2delta"] = "";
 	}
 
-	//const unsigned int Ventmachine::CO2Min() const
-	//{
-	//	unsigned int result(0);
-	//	for (auto pIt = mCO2.begin(); pIt != mCO2.end(); ++pIt)
-	//		result = result ? min(pIt->second, result) : pIt->second;
-	//	return result;
-	//}
+	const unsigned int Ventmachine::CO2min() const
+	{
+		unsigned int result(0);
+		for (auto pIt = mCO2.begin(); pIt != mCO2.end(); ++pIt)
+			result = result ? min(pIt->second, result) : pIt->second;
+		return result;
+	}
 
-	//const unsigned int Ventmachine::CO2Max() const
-	//{
-	//	unsigned int result(0);
-	//	for (auto pIt = mCO2.begin(); pIt != mCO2.end(); ++pIt)
-	//		result = result ? max(pIt->second, result) : pIt->second;
-	//	return result;
-	//}
+	const unsigned int Ventmachine::CO2max() const
+	{
+		unsigned int result(0);
+		for (auto pIt = mCO2.begin(); pIt != mCO2.end(); ++pIt)
+			result = result ? max(pIt->second, result) : pIt->second;
+		return result;
+	}
 
 	bool Ventmachine::Loop() const
 	{
@@ -37,30 +36,47 @@ namespace home
 		mLoopMillis = millis();
 		std::cout << "Ventmachine::Loop()" << std::endl;
 		Devices& devices = Devices::GetInstance();
-		auto co2 = devices.Get<size_t>(mValue["CO2"]);
-		std::cout << "\t" << "[co2]=" << co2 << std::endl;
-		//if (co2)
-		//{
-		//	auto co2min = Get<size_t>("[CO2min]");
-		//	auto co2max = Get<size_t>("[CO2max]");
-		//	if (!co2min || co2 < co2min)
-		//	{
-		//		co2min = co2;
-		//		Save("[CO2min]", std::string(co2min));
-		//	}
-		//	if (co2 > co2max)
-		//	{
-		//		co2max = co2;
-		//		Save("[CO2max]", std::string(co2max));
-		//	}
-		//}
 	//	//unsigned long mMillis(millis());
 	//	//// Если millis() обнулился - очищаем mCO2
 	//	//if (mCO2.size() && 
 	//	//	mMillis < (--mCO2.end())->first)
 	//	//	mCO2.clear();
 	//	////
-	//	//mCO2[mMillis] = atoi(mDevices.Get(Get("CO2")).c_str());
+		auto co2 = devices.Get<unsigned int>(mValue["CO2"]);
+		if (co2)
+		{
+			mCO2[mLoopMillis] = co2;
+			Save("CO2delta", CO2max() - CO2min());
+		}
+		if (devices.Get<bool>(mValue["Switch"]))
+		{
+			// Приточка включена
+			if (mCO2.size())
+			{
+				// Время работы
+				unsigned long workingTime = mCO2.rbegin()->first - mCO2.begin()->first;
+				std::cout << "\t" << "[workingTime]=" << workingTime << std::endl;
+				unsigned long workingTimeMax = 1 * 60000;
+				std::cout << "\t" << "[workingTimeMax]=" << workingTimeMax << std::endl;
+				std::cout << "\t" << "[workingTime >= workingTimeMax]=" << (workingTime >= workingTimeMax) << std::endl;
+				std::cout << "\t" << "[CO2delta]=" << Get<unsigned int>("CO2delta") << std::endl;
+
+				// Если работает долго, проверяем не нужно ли выключить
+				// Выключаем, если разница между CO2max - CO2min небольшая
+				if (workingTime >= workingTimeMax //&& 
+					//Get<unsigned int>("CO2delta") < 100
+					)
+				{
+					std::cout << "\t" << "Off" << std::endl;
+					Devices::GetInstance().Set(mValue["Switch"], 0);
+					mCO2.clear();
+				}
+			}
+		}
+		else
+		{
+			// Приточка выключена
+		}
 	//	//if (mDevices.Get(Get("Switch")) == "true")
 	//	//{
 	//	//	std::cout << "\t" << "Switch true" << std::endl;

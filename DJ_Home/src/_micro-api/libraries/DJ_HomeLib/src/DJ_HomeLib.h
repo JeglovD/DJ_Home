@@ -4,15 +4,13 @@
 #include <functional>
 #include <serstream.h>
 #include <string>
+#include <sstream>
 #include <map>
 #include <set>
 #include <OneWire.h>
 #include <Ethernet.h>
 #include <EthernetClient.h>
 #include <PubSubClient.h>
-
-#include <iostream>
-#include <sstream>
 
 namespace home
 {
@@ -42,7 +40,24 @@ namespace home
 		}
 		//void OptionPublish(const String& option) const;
 		void Set(const std::string& json) const;
-		void Set(const std::string& option, const std::string& value) const;
+		//void Set(const std::string& option, const std::string& value) const;
+		//void Device::Set(const std::string& option, const std::string& value) const
+		template <typename T>
+		void Set(const std::string& option, const T& value) const
+		{
+			//std::cout << "Device::OptionSet()" << std::endl;
+			//std::cout << "\t" << "[" << id << "] = " << value << std::endl;
+			if (mValue.find(option) == mValue.end())
+				MqttPublish(mAddress + "/Message", "The \"" + option + "\" option is not supported.");
+			else
+			{
+				std::stringstream ss;
+				ss << value;
+				if (!SetProtected(option, ss.str()))
+					MqttPublish(mAddress + "/Message", "The \"" + option + "\" option cannot be set.");
+			}
+		}
+
 
 		std::map<std::string, void(Device::*)(const std::string&) const> mFunctions;
 
@@ -50,7 +65,25 @@ namespace home
 		// Используется датчиками для сохранения своих значений в map mValue
 		// При сохранении проверяет есть ли переменная в списке соответствующего устройства
 		// Публикует сообщение в MQTT
-		void Save(const std::string& option, const std::string& value) const;
+		//void Save(const std::string& option, const std::string& value) const;
+		//void Device::Save(const std::string& option, const std::string& value) const
+		template <typename T>
+		//void Device::Save(const std::string& option, const ValueT& value) const
+		void Save(const std::string& option, const T& value) const
+		{
+			//	//std::cout << "Device::OptionSetProtected()" << std::endl;
+			//	//std::cout << "\t" << "[" << option << "]=" << value << std::endl;
+			auto pIt = mValue.find(option);
+			if (pIt == mValue.end())
+				MqttPublish(mAddress + "/Message", "The \"" + option + "\" option is not supported.");
+			else
+			{
+				std::stringstream ss;
+				ss << value;
+				pIt->second = ss.str();
+				MqttPublish(mAddress + "/" + option, pIt->second);
+			}
+		}
 
 		//void Publish(const std::string& json) const;
 		// Изменяет состояние устройства, вызывается из Set()
@@ -61,6 +94,7 @@ namespace home
 		mutable unsigned long mLoopMillis;
 
 	private:
+		void MqttPublish(const std::string& topic, const std::string& value) const;
 		const std::string mAddress;
 	};
 
@@ -86,8 +120,25 @@ namespace home
 		std::pair<iterator, bool> insert(Device&& device);
 		iterator find(const std::string& address);
 		bool Loop() const;
-	//	//void OptionPublish(const std::string& device, const std::string& option = "") const;
-	//	//void Set(const std::string& device, const std::string& option, const std::string& value) const;
+		void MqttPublish(const std::string& topic, const std::string& value) const;
+		//	//void OptionPublish(const std::string& device, const std::string& option = "") const;
+		//void Set(const std::string& device, const std::string& option, const std::string& value) const;
+		//void Devices::Set(const std::string& device, const std::string& option, const std::string& value) const
+		template <typename T>
+		void Set(const std::string& topic, const T& value)
+		{
+			auto pos = topic.rfind("/");
+			if (pos != std::string::npos)
+			{
+				std::string device = topic.substr(0, pos);
+				std::string option = topic.substr(pos + 1);
+				auto pIt = this->find(device);
+				if (pIt == end())
+					MqttPublish("Message", "Device \"" + device + "\" is not found.");
+				else
+					(**pIt).Set(option, value);
+			}
+		}
 		template <typename T>
 		const T Get(const std::string& topic)
 		{
